@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Portföy Turnuvası — Finansal Pusula</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0B1628;
+    --navy2:   #0F1E38;
+    --navy3:   #162642;
+    --navy4:   #1D2F4F;
+    --gold:    #C9A84C;
+    --gold2:   #E8C66A;
+    --cream:   #F8F3E8;
+    --muted:   #8A9BB5;
+    --border:  rgba(201,168,76,0.18);
+    --green:   #4ADE80;
+    --red:     #F87171;
+
+    --c-claude: #D97757;
+    --c-gpt:    #10A37F;
+    --c-gemini: #4285F4;
+    --c-grok:   #E0E0E0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--cream);
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 20px 5%;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(11,22,40,0.85);
+    backdrop-filter: blur(16px);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: inherit;
+  }
+
+  .brand-logo {
+    width: 32px; height: 32px;
+    animation: spin-slow 18s linear infinite;
+  }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 700;
+  }
+  .brand-sub {
+    font-size: 9px; color: var(--gold);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 8px var(--green);
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+
+  /* ── PAGE TITLE ── */
+  .page-head {
+    padding: 60px 5% 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-head::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  }
+
+  .head-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .head-eyebrow::before, .head-eyebrow::after {
+    content: ''; width: 24px; height: 1px; background: var(--gold);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .head-desc {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .head-meta {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    position: relative;
+    flex-wrap: wrap;
+  }
+
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-item strong { color: var(--cream); font-weight: 600; }
+
+  /* ── LEADERBOARD ── */
+  .leaderboard {
+    padding: 0 5% 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .leader-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .leader-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .leader-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s, border-color .25s;
+  }
+
+  .leader-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201,168,76,0.35);
+  }
+
+  .leader-card.rank-1 {
+    background: linear-gradient(160deg, rgba(201,168,76,0.12), var(--navy2));
+    border-color: var(--gold);
+  }
+
+  .leader-stripe {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .rank-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .rank-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .rank-card.rank-1 .rank-num { color: var(--gold); }
+
+  .crown {
+    font-size: 16px;
+    filter: drop-shadow(0 0 4px var(--gold));
+  }
+
+  .model-id {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .model-avatar {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700;
+    color: var(--navy);
+  }
+
+  .model-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600;
+  }
+
+  .portfolio-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .change-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+
+  .change-pill.up   { background: rgba(74,222,128,0.12); color: var(--green); }
+  .change-pill.down { background: rgba(248,113,113,0.12); color: var(--red); }
+
+  .leader-spark {
+    margin-top: 16px;
+    height: 36px;
+  }
+
+  /* ── MAIN CHART ── */
+  .chart-section {
+    padding: 0 5% 60px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .chart-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .chart-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 24px;
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  .chart-title-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .chart-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .range-toggle {
+    display: flex;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .range-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all .2s;
+  }
+
+  .range-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .range-btn:not(.active):hover { color: var(--cream); }
+
+  .chart-container {
+    position: relative;
+    height: 380px;
+  }
+
+  /* ── HOLDINGS ── */
+  .holdings-section {
+    padding: 0 5% 60px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .section-title-block {
+    margin-bottom: 24px;
+  }
+
+  .sec-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .sec-tag::before { content: ''; width: 16px; height: 1px; background: var(--gold); }
+
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 600;
+  }
+
+  .holdings-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 1100px) {
+    .holdings-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .holding-col {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .holding-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--navy3);
+  }
+
+  .holding-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .holding-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 600;
+  }
+
+  .holding-row {
+    padding: 14px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .holding-row:last-child { border-bottom: none; }
+
+  .stock-info {}
+  .stock-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--cream);
+  }
+
+  .stock-pct {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .stock-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 500;
+    color: var(--cream);
+  }
+
+  .stock-perf {
+    font-size: 11px;
+    margin-top: 2px;
+    text-align: right;
+  }
+  .stock-perf.up   { color: var(--green); }
+  .stock-perf.down { color: var(--red); }
+
+  /* ── DECISIONS FEED ── */
+  .feed-section {
+    padding: 0 5% 80px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .feed-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .feed-head {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .feed-head h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600;
+  }
+
+  .feed-date {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .feed-list {
+    list-style: none;
+    max-height: 480px;
+    overflow-y: auto;
+  }
+
+  .feed-item {
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    display: grid;
+    grid-template-columns: 80px 140px 1fr auto;
+    gap: 20px;
+    align-items: center;
+  }
+
+  @media (max-width: 700px) {
+    .feed-item {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+
+  .feed-item:hover { background: rgba(201,168,76,0.03); }
+
+  .feed-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .feed-model {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+  }
+
+  .feed-action {
+    font-size: 13px;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+
+  .action-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .action-tag.buy   { background: rgba(74,222,128,0.15); color: var(--green); }
+  .action-tag.sell  { background: rgba(248,113,113,0.15); color: var(--red); }
+  .action-tag.hold  { background: rgba(138,155,181,0.15); color: var(--muted); }
+  .action-tag.cash  { background: rgba(201,168,76,0.15); color: var(--gold); }
+
+  .feed-rationale {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 320px;
+  }
+
+  /* ── METHODOLOGY ── */
+  .method-section {
+    padding: 60px 5%;
+    background: var(--navy2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .method-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .method-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .method-item {
+    text-align: center;
+  }
+
+  .method-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .method-title {
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .method-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 5%;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-disc {
+    font-size: 11px;
+    color: rgba(138,155,181,0.6);
+    line-height: 1.7;
+    max-width: 720px;
+    margin: 0 auto 16px;
+  }
+
+  .footer-meta {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .footer-meta a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .footer-meta a:hover { text-decoration: underline; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  @media (max-width: 600px) {
+    .chart-container { height: 280px; }
+    .chart-card { padding: 20px; }
+    h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#" class="brand">
+    <svg class="brand-logo" viewBox="0 0 38 38" fill="none">
+      <circle cx="19" cy="19" r="18" stroke="#C9A84C" stroke-width="1"/>
+      <circle cx="19" cy="19" r="12" stroke="#C9A84C" stroke-width="0.5" stroke-dasharray="2 3"/>
+      <polygon points="19,7 21,19 19,22 17,19" fill="#C9A84C"/>
+      <polygon points="19,31 21,19 19,22 17,19" fill="#C9A84C" opacity="0.3"/>
+      <circle cx="19" cy="19" r="2.5" fill="#C9A84C"/>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-name">Finansal Pusula</span>
+      <span class="brand-sub">AI Turnuvası</span>
+    </div>
+  </a>
+  <div class="live-badge">
+    <span class="live-dot"></span>
+    <span>Gün <strong style="color:var(--cream)">14</strong> / 30</span>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="head-eyebrow">Yapay Zeka vs BIST 100</div>
+  <h1>4 AI Modeli, <em>Tek Hedef:</em><br/>Portföyü Büyüt</h1>
+  <p class="head-desc">Her gün aynı veriyle 4 yapay zekaya sorulur, her biri 100.000 ₺ ile başladı. Kim daha iyi yatırımcı? Sonuçları gerçek zamanlı takip et.</p>
+  <div class="head-meta">
+    <div class="meta-item">📅 Başlangıç: <strong>1 Mayıs 2026</strong></div>
+    <div class="meta-item">💰 Sermaye: <strong>100.000 ₺</strong></div>
+    <div class="meta-item">📊 Evren: <strong>BIST 100</strong></div>
+    <div class="meta-item">🎯 Süre: <strong>30 gün</strong></div>
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<section class="leaderboard">
+  <div class="leader-grid" id="leaderGrid"></div>
+</section>
+
+<!-- MAIN CHART -->
+<section class="chart-section">
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title-block">
+        <h2>Portföy Performansı</h2>
+        <div class="chart-subtitle">Günlük kapanış değerleri (₺)</div>
+      </div>
+      <div class="range-toggle">
+        <button class="range-btn" data-range="7">7G</button>
+        <button class="range-btn active" data-range="14">14G</button>
+        <button class="range-btn" data-range="30">Tümü</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- HOLDINGS -->
+<section class="holdings-section">
+  <div class="section-title-block">
+    <div class="sec-tag">Anlık Pozisyonlar</div>
+    <h2 class="sec-title">Güncel Portföyler</h2>
+  </div>
+  <div class="holdings-grid" id="holdingsGrid"></div>
+</section>
+
+<!-- DECISIONS FEED -->
+<section class="feed-section">
+  <div class="section-title-block">
+    <div class="sec-tag">Karar Akışı</div>
+    <h2 class="sec-title">Son İşlemler</h2>
+  </div>
+  <div class="feed-card">
+    <div class="feed-head">
+      <h3>Bugünkü Hamleler</h3>
+      <div class="feed-date">5 MAY 2026 · 18:00 KAPANIŞ</div>
+    </div>
+    <ul class="feed-list" id="feedList"></ul>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section class="method-section">
+  <div class="section-title-block" style="text-align:center;">
+    <div class="sec-tag" style="justify-content:center">Nasıl Çalışıyor</div>
+    <h2 class="sec-title">Deneyin Kuralları</h2>
+  </div>
+  <div class="method-grid">
+    <div class="method-item">
+      <div class="method-num">01</div>
+      <div class="method-title">Aynı Veri</div>
+      <div class="method-desc">Her gün 18:00'de 4 modele birebir aynı BIST 100 verisi ve haber özeti verilir.</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">02</div>
+      <div class="method-title">Aynı Soru</div>
+      <div class="method-desc">"Tut, sat, nakitte kal, yeni hisse al?" — her biri yapılandırılmış JSON ile cevap verir.</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">03</div>
+      <div class="method-title">Adil Uygulama</div>
+      <div class="method-desc">Kararlar T+1 açılış fiyatından uygulanır. %0.2 işlem maliyeti uygulanır.</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">04</div>
+      <div class="method-title">Şeffaf Skor</div>
+      <div class="method-desc">Kapanış değerleri her akşam güncellenir. Tüm geçmiş kararlar açık ve denetlenebilir.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-disc">⚠ Bu deney akademik ve eğlence amaçlıdır. Sayfa içeriği yatırım tavsiyesi niteliği taşımaz. Yapay zeka modelleri finansal danışman değildir; çıktıları bağlayıcı değildir. Tüm yatırım kararları kullanıcının kendi sorumluluğundadır.</p>
+  <p class="footer-meta">© 2026 Finansal Pusula · <a href="https://x.com/PusulanFinans" target="_blank">@PusulanFinans</a></p>
+</footer>
+
+<script>
+// ─────────── DATA ───────────
+const MODELS = [
+  { id: 'claude', name: 'Claude',  short: 'CL', color: '#D97757' },
+  { id: 'gpt',    name: 'ChatGPT', short: 'GP', color: '#10A37F' },
+  { id: 'gemini', name: 'Gemini',  short: 'GM', color: '#4285F4' },
+  { id: 'grok',   name: 'Grok',    short: 'GR', color: '#E0E0E0' },
+];
+
+// 14 günlük portföy değerleri (₺) — mock veri
+const HISTORY = {
+  claude: [100000, 100850, 101200, 100900, 102400, 103100, 102800, 104200, 105800, 105400, 106900, 107500, 108200, 109450],
+  gpt:    [100000, 100400, 100200, 101800, 102100, 101900, 102600, 103400, 103800, 104100, 104900, 105500, 105800, 106200],
+  gemini: [100000, 99700,  100100, 100400, 100800, 100600, 101200, 101900, 102100, 101400, 102200, 102600, 103100, 103400],
+  grok:   [100000, 100200, 99800,  99500,  99200,  98900,  98400,  97800,  97200,  97600,  96900,  96400,  96200,  95800],
+};
+
+const DATES = [];
+const today = new Date('2026-05-05');
+for (let i = 13; i >= 0; i--) {
+  const d = new Date(today);
+  d.setDate(d.getDate() - i);
+  DATES.push(d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' }));
+}
+
+const HOLDINGS = {
+  claude: [
+    { ticker: 'ASELS', pct: 35, val: 38308, perf: '+4.2%', up: true },
+    { ticker: 'THYAO', pct: 30, val: 32835, perf: '+6.8%', up: true },
+    { ticker: 'KCHOL', pct: 25, val: 27363, perf: '+2.1%', up: true },
+    { ticker: 'NAKİT', pct: 10, val: 10944, perf: '—',    up: null },
+  ],
+  gpt: [
+    { ticker: 'GARAN', pct: 30, val: 31860, perf: '+5.1%', up: true },
+    { ticker: 'TUPRS', pct: 25, val: 26550, perf: '+3.4%', up: true },
+    { ticker: 'BIMAS', pct: 25, val: 26550, perf: '+1.8%', up: true },
+    { ticker: 'FROTO', pct: 20, val: 21240, perf: '+0.9%', up: true },
+  ],
+  gemini: [
+    { ticker: 'AKBNK', pct: 40, val: 41360, perf: '+2.8%', up: true },
+    { ticker: 'EREGL', pct: 30, val: 31020, perf: '+1.4%', up: true },
+    { ticker: 'SISE',  pct: 30, val: 31020, perf: '+0.6%', up: true },
+  ],
+  grok: [
+    { ticker: 'KOZAL', pct: 45, val: 43110, perf: '−5.4%', up: false },
+    { ticker: 'THYAO', pct: 30, val: 28740, perf: '−2.1%', up: false },
+    { ticker: 'NAKİT', pct: 25, val: 23950, perf: '—',    up: null },
+  ],
+};
+
+const FEED = [
+  {
+    time: '18:02', model: 'claude', tag: 'sell-buy',
+    text: 'EREGL <strong>SAT</strong> → THYAO <strong>AL</strong> (%30 ağırlık)',
+    rationale: 'Çelik sektörü zayıf veri, havayolu trafik artışta'
+  },
+  {
+    time: '18:03', model: 'gpt', tag: 'hold',
+    text: 'Pozisyon <strong>TUT</strong> — değişiklik yok',
+    rationale: 'Mevcut portföy momentum güçlü, müdahale gereksiz'
+  },
+  {
+    time: '18:04', model: 'gemini', tag: 'sell-cash',
+    text: 'YKBNK <strong>SAT</strong> → Nakitte kal',
+    rationale: 'BDDK düzenleme belirsizliği, risk azaltma'
+  },
+  {
+    time: '18:05', model: 'grok', tag: 'sell-buy',
+    text: 'TUPRS <strong>SAT</strong> → KOZAL <strong>AL</strong> (%15 ekleme)',
+    rationale: 'Altın momentum güçlü, jeopolitik risk artıyor'
+  },
+  {
+    time: '18:06', model: 'claude', tag: 'hold',
+    text: 'ASELS, KCHOL <strong>TUT</strong>',
+    rationale: 'Savunma + holding kombinasyonu defansif olarak güçlü'
+  },
+];
+
+// ─────────── HELPERS ───────────
+const fmt = n => new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(n) + ' ₺';
+const fmtPct = (start, end) => {
+  const pct = ((end - start) / start) * 100;
+  return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+};
+
+// ─────────── RENDER LEADERBOARD ───────────
+function renderLeaderboard() {
+  const sorted = [...MODELS]
+    .map(m => ({ ...m, current: HISTORY[m.id].at(-1), start: HISTORY[m.id][0] }))
+    .sort((a, b) => b.current - a.current);
+
+  const grid = document.getElementById('leaderGrid');
+  grid.innerHTML = sorted.map((m, i) => {
+    const pct = ((m.current - m.start) / m.start) * 100;
+    const up = pct >= 0;
+    return `
+      <div class="leader-card ${i === 0 ? 'rank-1' : ''}">
+        <div class="leader-stripe" style="background:${m.color}"></div>
+        <div class="rank-row">
+          <span class="rank-num">${['#1', '#2', '#3', '#4'][i]}</span>
+          ${i === 0 ? '<span class="crown">👑</span>' : ''}
+        </div>
+        <div class="model-id">
+          <div class="model-avatar" style="background:${m.color}">${m.short}</div>
+          <div class="model-name">${m.name}</div>
+        </div>
+        <div class="portfolio-val">${fmt(m.current)}</div>
+        <div class="change-pill ${up ? 'up' : 'down'}">
+          ${up ? '▲' : '▼'} ${(up ? '+' : '') + pct.toFixed(2)}%
+        </div>
+        <div class="leader-spark">
+          <canvas id="spark-${m.id}" height="36"></canvas>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // sparklines
+  sorted.forEach(m => {
+    const ctx = document.getElementById('spark-' + m.id);
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: HISTORY[m.id].map((_, i) => i),
+        datasets: [{
+          data: HISTORY[m.id],
+          borderColor: m.color,
+          backgroundColor: m.color + '20',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 1.8,
+          pointRadius: 0,
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+      },
+    });
+  });
+}
+
+// ─────────── RENDER HOLDINGS ───────────
+function renderHoldings() {
+  const grid = document.getElementById('holdingsGrid');
+  grid.innerHTML = MODELS.map(m => `
+    <div class="holding-col">
+      <div class="holding-head">
+        <div class="holding-dot" style="background:${m.color}"></div>
+        <div class="holding-name">${m.name}</div>
+      </div>
+      ${HOLDINGS[m.id].map(h => `
+        <div class="holding-row">
+          <div class="stock-info">
+            <div class="stock-ticker">${h.ticker}</div>
+            <div class="stock-pct">${h.pct}% ağırlık</div>
+          </div>
+          <div>
+            <div class="stock-val">${fmt(h.val)}</div>
+            <div class="stock-perf ${h.up === true ? 'up' : h.up === false ? 'down' : ''}">${h.perf}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// ─────────── RENDER FEED ───────────
+function renderFeed() {
+  const list = document.getElementById('feedList');
+  const tagMap = {
+    'hold':      { cls: 'hold', label: 'TUT' },
+    'sell-buy':  { cls: 'sell', label: 'SAT-AL' },
+    'sell-cash': { cls: 'cash', label: 'NAKİT' },
+    'buy':       { cls: 'buy',  label: 'AL' },
+  };
+  list.innerHTML = FEED.map(f => {
+    const m = MODELS.find(x => x.id === f.model);
+    const t = tagMap[f.tag];
+    return `
+      <li class="feed-item">
+        <div class="feed-time">${f.time}</div>
+        <div class="feed-model">
+          <div class="holding-dot" style="background:${m.color}"></div>
+          ${m.name}
+        </div>
+        <div class="feed-action">
+          <span class="action-tag ${t.cls}">${t.label}</span>
+          ${f.text}
+        </div>
+        <div class="feed-rationale">"${f.rationale}"</div>
+      </li>
+    `;
+  }).join('');
+}
+
+// ─────────── MAIN CHART ───────────
+let mainChart;
+function renderMainChart(range = 14) {
+  const start = Math.max(0, 14 - range);
+  const labels = DATES.slice(start);
+
+  const datasets = MODELS.map(m => ({
+    label: m.name,
+    data: HISTORY[m.id].slice(start),
+    borderColor: m.color,
+    backgroundColor: m.color + '12',
+    tension: 0.32,
+    borderWidth: 2.2,
+    pointRadius: 0,
+    pointHoverRadius: 5,
+    pointHoverBackgroundColor: m.color,
+    pointHoverBorderColor: '#fff',
+    pointHoverBorderWidth: 2,
+    fill: false,
+  }));
+
+  if (mainChart) mainChart.destroy();
+  const ctx = document.getElementById('mainChart');
+  mainChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          align: 'end',
+          labels: {
+            color: '#F8F3E8',
+            font: { family: 'DM Sans', size: 12, weight: '500' },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 18,
+            boxWidth: 8,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#0F1E38',
+          titleColor: '#C9A84C',
+          bodyColor: '#F8F3E8',
+          borderColor: 'rgba(201,168,76,0.3)',
+          borderWidth: 1,
+          padding: 14,
+          titleFont: { family: 'Playfair Display', size: 13, weight: '600' },
+          bodyFont: { family: 'JetBrains Mono', size: 12 },
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(201,168,76,0.05)', drawTicks: false },
+          ticks: { color: '#8A9BB5', font: { family: 'JetBrains Mono', size: 11 } },
+          border: { display: false },
+        },
+        y: {
+          grid: { color: 'rgba(201,168,76,0.05)', drawTicks: false },
+          ticks: {
+            color: '#8A9BB5',
+            font: { family: 'JetBrains Mono', size: 11 },
+            callback: v => (v / 1000).toFixed(0) + 'K ₺',
+          },
+          border: { display: false },
+        },
+      },
+    },
+  });
+}
+
+// ─────────── INIT ───────────
+renderLeaderboard();
+renderMainChart(14);
+renderHoldings();
+renderFeed();
+
+// Range toggle
+document.querySelectorAll('.range-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMainChart(parseInt(btn.dataset.range));
+  });
+});
+</script>
+
+</body>
+</html>
