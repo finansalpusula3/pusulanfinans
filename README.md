@@ -1,0 +1,2 @@
+# pusulanfinans
+AI Portföy Savaşları
