@@ -4,6 +4,35 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>AI Portföy Turnuvası — Finansal Pusula</title>
+
+<!-- SEO -->
+<meta name="description" content="Claude, ChatGPT, Gemini ve Grok aynı veriyle BIST 100'de yarışıyor. Her birinin başlangıç sermayesi 100.000 ₺. Sonuçları her gün takip et — Finansal Pusula." />
+<meta name="author" content="Finansal Pusula" />
+<meta name="theme-color" content="#0B1628" />
+<link rel="canonical" href="https://www.pusulanfinans.com/" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.pusulanfinans.com/" />
+<meta property="og:site_name" content="Finansal Pusula" />
+<meta property="og:title" content="AI Portföy Turnuvası — Finansal Pusula" />
+<meta property="og:description" content="4 yapay zeka, BIST 100'de gerçek bir portföy yarışı. Aynı veri, aynı sermaye, farklı kararlar. Sonuçları takip et." />
+<meta property="og:image" content="https://www.pusulanfinans.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="tr_TR" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@PusulanFinans" />
+<meta name="twitter:creator" content="@PusulanFinans" />
+<meta name="twitter:title" content="AI Portföy Turnuvası — Finansal Pusula" />
+<meta name="twitter:description" content="4 yapay zeka, BIST 100'de gerçek bir portföy yarışı. Sonuçları takip et." />
+<meta name="twitter:image" content="https://www.pusulanfinans.com/og-image.png" />
+
+<!-- Favicon: inline compass SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 38 38'%3E%3Crect width='38' height='38' rx='8' fill='%230B1628'/%3E%3Ccircle cx='19' cy='19' r='14' stroke='%23C9A84C' stroke-width='1' fill='none'/%3E%3Cpolygon points='19,8 21,19 19,22 17,19' fill='%23C9A84C'/%3E%3Cpolygon points='19,30 21,19 19,22 17,19' fill='%23C9A84C' opacity='0.35'/%3E%3Ccircle cx='19' cy='19' r='2' fill='%23C9A84C'/%3E%3C/svg%3E" />
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -25,7 +54,16 @@
     --c-claude: #D97757;
     --c-gpt:    #10A37F;
     --c-gemini: #4285F4;
-    --c-grok:   #E0E0E0;
+    --c-grok:   #C9CDD3;
+    --c-bist:   #C9A84C;
+
+    /* Portfolio slice palette */
+    --slice-1: #C9A84C;
+    --slice-2: #B86E45;
+    --slice-3: #6B8FB5;
+    --slice-4: #8FA876;
+    --slice-5: #A48BC0;
+    --slice-6: #4A5568;
   }
 
   html { scroll-behavior: smooth; }
@@ -79,24 +117,28 @@
     margin-top: 3px;
   }
 
-  .live-badge {
+  .last-updated {
     display: flex; align-items: center; gap: 8px;
-    font-size: 11px; font-weight: 600;
+    font-size: 11px; font-weight: 500;
     color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
-  .live-dot {
-    width: 8px; height: 8px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    box-shadow: 0 0 8px var(--green);
+  .last-updated-icon {
+    width: 12px; height: 12px;
+    color: var(--gold);
+    flex-shrink: 0;
   }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.4; }
+
+  .last-updated strong {
+    color: var(--cream);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  @media (max-width: 540px) {
+    .last-updated-label { display: none; }
   }
 
   /* ── PAGE TITLE ── */
@@ -151,23 +193,62 @@
   .head-desc {
     font-size: 15px;
     color: var(--muted);
-    max-width: 580px;
+    max-width: 640px;
     margin: 0 auto;
     line-height: 1.7;
     position: relative;
   }
 
   .head-meta {
-    display: flex; justify-content: center; gap: 32px;
-    margin-top: 24px;
+    display: flex; justify-content: center; gap: 28px;
+    margin-top: 28px;
     font-size: 12px;
     color: var(--muted);
     position: relative;
     flex-wrap: wrap;
+    letter-spacing: 0.04em;
   }
 
-  .meta-item { display: flex; align-items: center; gap: 6px; }
-  .meta-item strong { color: var(--cream); font-weight: 600; }
+  .meta-item {
+    display: flex; align-items: center; gap: 8px;
+    text-transform: uppercase;
+  }
+
+  .meta-item::before {
+    content: '';
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .meta-item strong {
+    color: var(--cream);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .head-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 32px;
+    padding: 11px 22px;
+    background: var(--gold);
+    color: var(--navy);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: transform .2s, background .2s;
+    position: relative;
+  }
+
+  .head-cta:hover {
+    transform: translateY(-1px);
+    background: var(--gold2);
+  }
+
+  .head-cta svg { width: 14px; height: 14px; }
 
   /* ── LEADERBOARD ── */
   .leaderboard {
@@ -190,7 +271,7 @@
     background: var(--navy2);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 24px;
+    padding: 22px;
     position: relative;
     overflow: hidden;
     transition: transform .25s, border-color .25s;
@@ -214,7 +295,7 @@
 
   .rank-row {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .rank-num {
@@ -224,37 +305,40 @@
     letter-spacing: 0.1em;
   }
 
-  .rank-card.rank-1 .rank-num { color: var(--gold); }
+  .leader-card.rank-1 .rank-num { color: var(--gold); }
 
-  .crown {
-    font-size: 16px;
-    filter: drop-shadow(0 0 4px var(--gold));
+  .rank-medal {
+    width: 18px; height: 18px;
+    color: var(--gold);
+    filter: drop-shadow(0 0 6px rgba(201,168,76,0.5));
   }
 
-  .model-id {
+  .model-name-row {
     display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
-  .model-avatar {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; font-weight: 700;
-    color: var(--navy);
+  .model-color-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   .model-name {
     font-family: 'Playfair Display', serif;
-    font-size: 18px; font-weight: 600;
+    font-size: 19px; font-weight: 600;
   }
 
   .portfolio-val {
     font-family: 'JetBrains Mono', monospace;
     font-size: 24px; font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     letter-spacing: -0.02em;
+  }
+
+  .change-row {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
   }
 
   .change-pill {
@@ -262,15 +346,58 @@
     font-size: 12px; font-weight: 600;
     padding: 3px 10px;
     border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   .change-pill.up   { background: rgba(74,222,128,0.12); color: var(--green); }
   .change-pill.down { background: rgba(248,113,113,0.12); color: var(--red); }
+  .change-pill.flat { background: rgba(138,155,181,0.12); color: var(--muted); }
+
+  .change-pill svg { width: 9px; height: 9px; }
+
+  .rank-change {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 600;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .rank-change.up   { color: var(--green); }
+  .rank-change.down { color: var(--red); }
+
+  .rank-change svg { width: 8px; height: 8px; }
 
   .leader-spark {
-    margin-top: 16px;
+    margin-top: 14px;
     height: 36px;
   }
+
+  .leader-share {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 28px; height: 28px;
+    background: rgba(11,22,40,0.6);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    opacity: 0;
+  }
+
+  .leader-card:hover .leader-share {
+    opacity: 1;
+  }
+
+  .leader-share:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .leader-share svg { width: 12px; height: 12px; }
 
   /* ── MAIN CHART ── */
   .chart-section {
@@ -374,23 +501,38 @@
     .holdings-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
+  @media (max-width: 700px) {
+    .holdings-grid { grid-template-columns: 1fr; }
+  }
+
   .holding-col {
     background: var(--navy2);
     border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .holding-head {
-    padding: 14px 18px;
+    padding: 16px 18px;
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
     background: var(--navy3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .holding-head-left {
+    display: flex; align-items: center; gap: 10px;
+    min-width: 0;
   }
 
   .holding-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
+    flex-shrink: 0;
   }
 
   .holding-name {
@@ -398,15 +540,34 @@
     font-size: 15px; font-weight: 600;
   }
 
-  .holding-row {
-    padding: 14px 18px;
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid rgba(201,168,76,0.06);
+  .holding-pie {
+    width: 56px; height: 56px;
+    flex-shrink: 0;
+    position: relative;
   }
 
-  .holding-row:last-child { border-bottom: none; }
+  .holding-row {
+    padding: 13px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    gap: 12px;
+  }
 
-  .stock-info {}
+  .holding-row:last-of-type { border-bottom: none; }
+
+  .stock-info {
+    display: flex; align-items: center; gap: 10px;
+    min-width: 0;
+  }
+
+  .slice-marker {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .stock-text { min-width: 0; }
+
   .stock-ticker {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px; font-weight: 600;
@@ -423,15 +584,30 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px; font-weight: 500;
     color: var(--cream);
+    text-align: right;
   }
 
   .stock-perf {
     font-size: 11px;
     margin-top: 2px;
     text-align: right;
+    font-family: 'JetBrains Mono', monospace;
   }
   .stock-perf.up   { color: var(--green); }
   .stock-perf.down { color: var(--red); }
+  .stock-perf.flat { color: var(--muted); }
+
+  .holding-foot {
+    margin-top: auto;
+    padding: 12px 18px;
+    background: rgba(11,22,40,0.4);
+    border-top: 1px solid rgba(201,168,76,0.06);
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-style: italic;
+    letter-spacing: 0.01em;
+  }
 
   /* ── DECISIONS FEED ── */
   .feed-section {
@@ -447,51 +623,139 @@
     overflow: hidden;
   }
 
-  .feed-head {
-    padding: 20px 28px;
+  .feed-controls {
+    padding: 18px 28px;
     border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
   }
 
-  .feed-head h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px; font-weight: 600;
+  .feed-filter-group {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
   }
 
-  .feed-date {
-    font-size: 12px;
+  .feed-filter-label {
+    font-size: 10px; font-weight: 600;
     color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
+
+  .feed-filter-pills {
+    display: flex; gap: 4px;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+  }
+
+  .feed-pill {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .feed-pill .feed-pill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  .feed-pill.active {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .feed-pill:not(.active):hover { color: var(--cream); }
 
   .feed-list {
     list-style: none;
-    max-height: 480px;
+    max-height: 640px;
     overflow-y: auto;
   }
 
-  .feed-item {
-    padding: 18px 28px;
-    border-bottom: 1px solid rgba(201,168,76,0.06);
-    display: grid;
-    grid-template-columns: 80px 140px 1fr auto;
-    gap: 20px;
-    align-items: center;
+  .feed-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    font-style: italic;
   }
+
+  .feed-group-head {
+    padding: 14px 28px;
+    background: var(--navy3);
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .feed-group-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .feed-day {
+    list-style: none;
+  }
+
+  .feed-day-head {
+    padding: 10px 28px 8px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-top: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .feed-day:first-child .feed-day-head {
+    border-top: none;
+  }
+
+  .feed-item {
+    padding: 14px 28px;
+    border-top: 1px solid rgba(201,168,76,0.06);
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .feed-item:hover { background: rgba(201,168,76,0.04); }
 
   @media (max-width: 700px) {
     .feed-item {
       grid-template-columns: 1fr;
-      gap: 8px;
+      gap: 6px;
     }
-  }
-
-  .feed-item:hover { background: rgba(201,168,76,0.03); }
-
-  .feed-time {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
+    .feed-controls { padding: 14px 18px; }
+    .feed-day-head { padding: 10px 18px 8px; }
+    .feed-item { padding: 14px 18px; }
+    .feed-group-head { padding: 14px 18px; }
   }
 
   .feed-model {
@@ -520,11 +784,106 @@
   .action-tag.hold  { background: rgba(138,155,181,0.15); color: var(--muted); }
   .action-tag.cash  { background: rgba(201,168,76,0.15); color: var(--gold); }
 
-  .feed-rationale {
-    font-size: 12px;
+  .feed-arrow {
     color: var(--muted);
-    font-style: italic;
-    max-width: 320px;
+    font-size: 16px;
+    line-height: 1;
+    transition: color .15s, transform .15s;
+  }
+
+  .feed-item:hover .feed-arrow {
+    color: var(--gold);
+    transform: translateX(2px);
+  }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(11,22,40,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 1500;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    max-width: 600px; width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-head {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+
+  .modal-title-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 600;
+  }
+
+  .modal-date {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    line-height: 1;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+
+  .modal-close:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .modal-body {
+    padding: 24px 28px 28px;
+  }
+
+  .modal-action-line {
+    font-size: 14px;
+    color: var(--cream);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .modal-section-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .modal-rationale {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
   }
 
   /* ── METHODOLOGY ── */
@@ -569,6 +928,74 @@
     line-height: 1.6;
   }
 
+  /* ── FAQ ── */
+  .faq-section {
+    padding: 80px 5%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .faq-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .faq-item {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .faq-item[open] {
+    border-color: rgba(201,168,76,0.35);
+  }
+
+  .faq-question {
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cream);
+    list-style: none;
+    transition: background .15s;
+  }
+
+  .faq-question::-webkit-details-marker { display: none; }
+
+  .faq-question:hover {
+    background: rgba(201,168,76,0.04);
+  }
+
+  .faq-icon {
+    width: 12px; height: 12px;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform .2s;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    padding: 0 24px 20px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
   /* ── FOOTER ── */
   footer {
     padding: 32px 5%;
@@ -582,6 +1009,18 @@
     line-height: 1.7;
     max-width: 720px;
     margin: 0 auto 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .footer-disc-icon {
+    width: 14px; height: 14px;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+    opacity: 0.7;
   }
 
   .footer-meta {
@@ -595,6 +1034,44 @@
   }
   .footer-meta a:hover { text-decoration: underline; }
 
+  /* ── STICKY FOLLOW CTA ── */
+  .sticky-cta {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 18px;
+    background: var(--gold);
+    color: var(--navy);
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.4);
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity .25s, transform .25s, background .15s;
+  }
+
+  .sticky-cta.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .sticky-cta:hover {
+    background: var(--gold2);
+  }
+
+  .sticky-cta svg { width: 13px; height: 13px; }
+
+  @media (max-width: 540px) {
+    .sticky-cta { bottom: 16px; right: 16px; padding: 10px 14px; font-size: 11px; }
+    .sticky-cta-label { display: none; }
+  }
+
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: var(--navy); }
@@ -605,6 +1082,7 @@
     .chart-container { height: 280px; }
     .chart-card { padding: 20px; }
     h1 { font-size: 32px; }
+    .head-meta { gap: 16px 22px; }
   }
 </style>
 </head>
@@ -624,22 +1102,29 @@
       <span class="brand-sub">AI Turnuvası</span>
     </div>
   </a>
-  <div class="live-badge">
-    <span class="live-dot"></span>
-    <span>Gün <strong style="color:var(--cream)">14</strong> / 30</span>
+  <div class="last-updated">
+    <svg class="last-updated-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span class="last-updated-label">Son güncelleme:&nbsp;</span>
+    <strong id="lastUpdated">14 May · 18:00</strong>
   </div>
 </header>
 
 <section class="page-head">
   <div class="head-eyebrow">Yapay Zeka vs BIST 100</div>
   <h1>4 AI Modeli, <em>Tek Hedef:</em><br/>Portföyü Büyüt</h1>
-  <p class="head-desc">Her gün aynı veriyle 4 yapay zekaya sorulur, her biri 100.000 ₺ ile başladı. Kim daha iyi yatırımcı? Sonuçları gerçek zamanlı takip et.</p>
+  <p class="head-desc">Her gün aynı BIST 100 ve makroekonomik günlük gündem verileriyle 4 ayrı yapay zekayı besliyorum. Her birinin başlangıç sermayesi 100.000 ₺'di. Kim daha iyi yatırımcı? Sonuçları günlük olarak takip et.</p>
   <div class="head-meta">
-    <div class="meta-item">📅 Başlangıç: <strong>1 Mayıs 2026</strong></div>
-    <div class="meta-item">💰 Sermaye: <strong>100.000 ₺</strong></div>
-    <div class="meta-item">📊 Evren: <strong>BIST 100</strong></div>
-    <div class="meta-item">🎯 Süre: <strong>30 gün</strong></div>
+    <div class="meta-item">Başlangıç <strong>1 Mayıs 2026</strong></div>
+    <div class="meta-item">Sermaye <strong>100.000 ₺</strong></div>
+    <div class="meta-item">Evren <strong>BIST 100</strong></div>
   </div>
+  <a class="head-cta" href="https://x.com/PusulanFinans" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    Takip et @PusulanFinans
+  </a>
 </section>
 
 <!-- LEADERBOARD -->
@@ -653,12 +1138,11 @@
     <div class="chart-head">
       <div class="chart-title-block">
         <h2>Portföy Performansı</h2>
-        <div class="chart-subtitle">Günlük kapanış değerleri (₺)</div>
+        <div class="chart-subtitle">Günlük kapanış değerleri (₺) · Kesik altın çizgi 100.000 ₺ başlangıç seviyesi · Gri kesik çizgi BIST 100 endeks (sermaye-eşdeğer)</div>
       </div>
       <div class="range-toggle">
-        <button class="range-btn" data-range="7">7G</button>
-        <button class="range-btn active" data-range="14">14G</button>
-        <button class="range-btn" data-range="30">Tümü</button>
+        <button class="range-btn" data-range="7">Son 7 Gün</button>
+        <button class="range-btn active" data-range="all">Hepsi</button>
       </div>
     </div>
     <div class="chart-container">
@@ -670,7 +1154,7 @@
 <!-- HOLDINGS -->
 <section class="holdings-section">
   <div class="section-title-block">
-    <div class="sec-tag">Anlık Pozisyonlar</div>
+    <div class="sec-tag">Güncel Pozisyonlar</div>
     <h2 class="sec-title">Güncel Portföyler</h2>
   </div>
   <div class="holdings-grid" id="holdingsGrid"></div>
@@ -680,12 +1164,27 @@
 <section class="feed-section">
   <div class="section-title-block">
     <div class="sec-tag">Karar Akışı</div>
-    <h2 class="sec-title">Son İşlemler</h2>
+    <h2 class="sec-title">Karar Arşivi</h2>
   </div>
   <div class="feed-card">
-    <div class="feed-head">
-      <h3>Bugünkü Hamleler</h3>
-      <div class="feed-date">5 MAY 2026 · 18:00 KAPANIŞ</div>
+    <div class="feed-controls">
+      <div class="feed-filter-group">
+        <span class="feed-filter-label">Yapay Zeka</span>
+        <div class="feed-filter-pills" id="modelFilter">
+          <button class="feed-pill active" data-filter="all">Tümü</button>
+          <button class="feed-pill" data-filter="claude"><span class="feed-pill-dot" style="background:#D97757"></span>Claude</button>
+          <button class="feed-pill" data-filter="gpt"><span class="feed-pill-dot" style="background:#10A37F"></span>ChatGPT</button>
+          <button class="feed-pill" data-filter="gemini"><span class="feed-pill-dot" style="background:#4285F4"></span>Gemini</button>
+          <button class="feed-pill" data-filter="grok"><span class="feed-pill-dot" style="background:#C9CDD3"></span>Grok</button>
+        </div>
+      </div>
+      <div class="feed-filter-group">
+        <span class="feed-filter-label">Görünüm</span>
+        <div class="feed-filter-pills" id="viewFilter">
+          <button class="feed-pill active" data-view="weekly">Haftalık</button>
+          <button class="feed-pill" data-view="monthly">Aylık</button>
+        </div>
+      </div>
     </div>
     <ul class="feed-list" id="feedList"></ul>
   </div>
@@ -701,7 +1200,7 @@
     <div class="method-item">
       <div class="method-num">01</div>
       <div class="method-title">Aynı Veri</div>
-      <div class="method-desc">Her gün 18:00'de 4 modele birebir aynı BIST 100 verisi ve haber özeti verilir.</div>
+      <div class="method-desc">Her gün BIST 100 kapanışı sonrası 4 modele birebir aynı fiyat/hacim verisi ve günlük makro-haber özeti verilir.</div>
     </div>
     <div class="method-item">
       <div class="method-num">02</div>
@@ -711,52 +1210,140 @@
     <div class="method-item">
       <div class="method-num">03</div>
       <div class="method-title">Adil Uygulama</div>
-      <div class="method-desc">Kararlar T+1 açılış fiyatından uygulanır. %0.2 işlem maliyeti uygulanır.</div>
+      <div class="method-desc">Kararlar T+1 açılış fiyatından uygulanır. %0,2 işlem maliyeti her alım/satımda düşülür.</div>
     </div>
     <div class="method-item">
       <div class="method-num">04</div>
       <div class="method-title">Şeffaf Skor</div>
-      <div class="method-desc">Kapanış değerleri her akşam güncellenir. Tüm geçmiş kararlar açık ve denetlenebilir.</div>
+      <div class="method-desc">Kapanış değerleri her akşam güncellenir. Tüm geçmiş kararlar Karar Arşivi'nde açık ve denetlenebilirdir.</div>
     </div>
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="faq-head">
+    <div class="sec-tag" style="justify-content:center">Sıkça Sorulanlar</div>
+    <h2 class="sec-title">Merak Edilenler</h2>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary class="faq-question">
+        Hangi yapay zeka versiyonları yarışıyor?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">Turnuvada her modelin o günkü en güncel halka açık tüketici sürümü kullanılır. Sürüm değişikliği olduğunda turnuva günlüğüne not düşülür. Modeller için API değil, halka açık ürün arayüzleri tercih edilir — böylece sıradan bir kullanıcının erişebildiği ile aynı çıktı elde edilir.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-question">
+        Veri ve haberler nereden geliyor?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">BIST 100 kapanış fiyatları ve hacim verileri Borsa İstanbul ve veri sağlayıcılardan derlenir. Günlük gündem özeti; KAP açıklamaları, TCMB-Hazine duyuruları, küresel makro veriler (Fed, ECB, OPEC) ve ana akım finans medyası başlıklarından oluşturulur. Aynı özet 4 modele aynı anda verilir.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-question">
+        Karar verirken modellere tam olarak ne soruluyor?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">Her model; mevcut portföyünü, günün BIST 100 verilerini ve makro özeti alır. Karar olarak; tut, sat, nakitte kal veya yeni hisse al seçeneklerinden seçim yaparak yapılandırılmış JSON çıktısı verir. Portföy 0–5 hisseden oluşabilir, ağırlıklar serbesttir, nakit pozisyon %0–100 arası olabilir.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-question">
+        Bu bir yatırım tavsiyesi mi?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">Hayır. Bu sayfa akademik ve eğlence amaçlı bir karşılaştırma deneyidir. Yapay zeka modelleri lisanslı finansal danışman değildir; çıktıları bağlayıcı değildir, gelecekteki performansın göstergesi de değildir. Tüm yatırım kararları kullanıcının kendi sorumluluğundadır.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-question">
+        Kararlar ne zaman alınıyor, ne zaman uygulanıyor?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">Modeller her hafta içi günü 18:00 BIST kapanışı sonrası kararını verir. Alım/satım emirleri T+1 (ertesi iş günü) açılış fiyatından simüle edilerek uygulanır. Hafta sonu ve resmi tatillerde turnuva durur, portföy değerleri son kapanışta sabit kalır.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-question">
+        Kazanan ne kazanır?
+        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </summary>
+      <div class="faq-answer">Övünme hakkı. Bu turnuva kâr amacı gütmez; amaç dört popüler yapay zekanın aynı veriyle Türk piyasasında nasıl bir karar üreteceğini şeffafça karşılaştırmaktır. Sonuçlar @PusulanFinans X hesabında düzenli paylaşılır.</div>
+    </details>
+  </div>
+</section>
+
 <footer>
-  <p class="footer-disc">⚠ Bu deney akademik ve eğlence amaçlıdır. Sayfa içeriği yatırım tavsiyesi niteliği taşımaz. Yapay zeka modelleri finansal danışman değildir; çıktıları bağlayıcı değildir. Tüm yatırım kararları kullanıcının kendi sorumluluğundadır.</p>
-  <p class="footer-meta">© 2026 Finansal Pusula · <a href="https://x.com/PusulanFinans" target="_blank">@PusulanFinans</a></p>
+  <p class="footer-disc">
+    <svg class="footer-disc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <span>Bu deney akademik ve eğlence amaçlıdır. Sayfa içeriği yatırım tavsiyesi niteliği taşımaz. Yapay zeka modelleri finansal danışman değildir; çıktıları bağlayıcı değildir. Tüm yatırım kararları kullanıcının kendi sorumluluğundadır.</span>
+  </p>
+  <p class="footer-meta">© 2026 Finansal Pusula · <a href="https://x.com/PusulanFinans" target="_blank" rel="noopener">@PusulanFinans</a></p>
 </footer>
+
+<!-- STICKY FOLLOW CTA -->
+<a href="https://x.com/PusulanFinans" target="_blank" rel="noopener" class="sticky-cta" id="stickyCta">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+  <span class="sticky-cta-label">Takip et @PusulanFinans</span>
+</a>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title-row">
+          <span class="holding-dot" id="modalDot"></span>
+          <span class="modal-title" id="modalTitle">—</span>
+        </div>
+        <div class="modal-date" id="modalDate">—</div>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Kapat">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-action-line" id="modalAction">—</div>
+      <div class="modal-section-label">Karar Gerekçesi</div>
+      <div class="modal-rationale" id="modalRationale">—</div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ─────────── DATA ───────────
 const MODELS = [
-  { id: 'claude', name: 'Claude',  short: 'CL', color: '#D97757' },
-  { id: 'gpt',    name: 'ChatGPT', short: 'GP', color: '#10A37F' },
-  { id: 'gemini', name: 'Gemini',  short: 'GM', color: '#4285F4' },
-  { id: 'grok',   name: 'Grok',    short: 'GR', color: '#E0E0E0' },
+  { id: 'claude', name: 'Claude',  color: '#D97757' },
+  { id: 'gpt',    name: 'ChatGPT', color: '#10A37F' },
+  { id: 'gemini', name: 'Gemini',  color: '#4285F4' },
+  { id: 'grok',   name: 'Grok',    color: '#C9CDD3' },
 ];
 
 // 14 günlük portföy değerleri (₺) — mock veri
 const HISTORY = {
-  claude: [100000, 100850, 101200, 100900, 102400, 103100, 102800, 104200, 105800, 105400, 106900, 107500, 108200, 109450],
-  gpt:    [100000, 100400, 100200, 101800, 102100, 101900, 102600, 103400, 103800, 104100, 104900, 105500, 105800, 106200],
-  gemini: [100000, 99700,  100100, 100400, 100800, 100600, 101200, 101900, 102100, 101400, 102200, 102600, 103100, 103400],
-  grok:   [100000, 100200, 99800,  99500,  99200,  98900,  98400,  97800,  97200,  97600,  96900,  96400,  96200,  95800],
+  claude:  [100000, 100850, 101200, 100900, 102400, 103100, 102800, 104200, 105800, 105400, 106900, 107500, 108200, 109450],
+  gpt:     [100000, 100400, 100200, 101800, 102100, 101900, 102600, 103400, 103800, 104100, 104900, 105500, 105800, 106200],
+  gemini:  [100000,  99700, 100100, 100400, 100800, 100600, 101200, 101900, 102100, 101400, 102200, 102600, 103100, 103400],
+  grok:    [100000, 100200,  99800,  99500,  99200,  98900,  98400,  97800,  97200,  97600,  96900,  96400,  96200,  95800],
+  bist100: [100000, 100300, 100600, 100900, 101400, 101700, 101500, 102100, 102600, 102400, 103100, 103500, 103800, 104200],
 };
 
+const TODAY = new Date('2026-05-14');
 const DATES = [];
-const today = new Date('2026-05-05');
 for (let i = 13; i >= 0; i--) {
-  const d = new Date(today);
+  const d = new Date(TODAY);
   d.setDate(d.getDate() - i);
-  DATES.push(d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' }));
+  DATES.push(d);
 }
+const DATE_LABELS = DATES.map(d => d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' }));
 
 const HOLDINGS = {
   claude: [
     { ticker: 'ASELS', pct: 35, val: 38308, perf: '+4.2%', up: true },
     { ticker: 'THYAO', pct: 30, val: 32835, perf: '+6.8%', up: true },
     { ticker: 'KCHOL', pct: 25, val: 27363, perf: '+2.1%', up: true },
-    { ticker: 'NAKİT', pct: 10, val: 10944, perf: '—',    up: null },
+    { ticker: 'NAKİT', pct: 10, val: 10944, perf: '—',     up: null },
   ],
   gpt: [
     { ticker: 'GARAN', pct: 30, val: 31860, perf: '+5.1%', up: true },
@@ -772,69 +1359,226 @@ const HOLDINGS = {
   grok: [
     { ticker: 'KOZAL', pct: 45, val: 43110, perf: '−5.4%', up: false },
     { ticker: 'THYAO', pct: 30, val: 28740, perf: '−2.1%', up: false },
-    { ticker: 'NAKİT', pct: 25, val: 23950, perf: '—',    up: null },
+    { ticker: 'NAKİT', pct: 25, val: 23950, perf: '—',     up: null },
   ],
 };
 
+// FEED — birden fazla güne yayılmış mock kararlar
 const FEED = [
-  {
-    time: '18:02', model: 'claude', tag: 'sell-buy',
+  // 14 May
+  { date: '2026-05-14', model: 'claude', tag: 'sell-buy',
     text: 'EREGL <strong>SAT</strong> → THYAO <strong>AL</strong> (%30 ağırlık)',
-    rationale: 'Çelik sektörü zayıf veri, havayolu trafik artışta'
-  },
-  {
-    time: '18:03', model: 'gpt', tag: 'hold',
+    rationale: 'Çelik sektörü PMI verileri zayıf, EREGL son 5 günde göreceli olarak geride kaldı. THYAO ise mart-nisan trafik verileriyle rekor seviyeye yaklaştı; yaz sezonu rezervasyonları güçlü. Pozisyon ağırlığı %30\'a çıkarıldı.' },
+  { date: '2026-05-14', model: 'gpt', tag: 'hold',
     text: 'Pozisyon <strong>TUT</strong> — değişiklik yok',
-    rationale: 'Mevcut portföy momentum güçlü, müdahale gereksiz'
-  },
-  {
-    time: '18:04', model: 'gemini', tag: 'sell-cash',
+    rationale: 'Mevcut portföy momentum ve volatilite indikatörlerinde pozitif sinyal veriyor. GARAN, TUPRS ve BIMAS güçlü trende devam ediyor, müdahale risk-getiri dengesini bozar. Bekleme stratejisi tercih edildi.' },
+  { date: '2026-05-14', model: 'gemini', tag: 'sell-cash',
     text: 'YKBNK <strong>SAT</strong> → Nakitte kal',
-    rationale: 'BDDK düzenleme belirsizliği, risk azaltma'
-  },
-  {
-    time: '18:05', model: 'grok', tag: 'sell-buy',
+    rationale: 'BDDK\'nın bankacılık karşılık oranlarına ilişkin son düzenleme taslağı net gelir görünümünü baskıladı. Belirsizlik ortamında pozisyon kapatılarak nakit ağırlığı artırıldı; daha net sinyal beklenecek.' },
+  { date: '2026-05-14', model: 'grok', tag: 'sell-buy',
     text: 'TUPRS <strong>SAT</strong> → KOZAL <strong>AL</strong> (%15 ekleme)',
-    rationale: 'Altın momentum güçlü, jeopolitik risk artıyor'
-  },
-  {
-    time: '18:06', model: 'claude', tag: 'hold',
+    rationale: 'Brent petrol son haftalarda yatay seyirde, rafineri marjları daralma eğiliminde. Buna karşılık jeopolitik risklerin tırmanması ve dolar zayıflaması altın için pozitif. KOZAL ağırlığı %45\'e çıkarıldı.' },
+  { date: '2026-05-14', model: 'claude', tag: 'hold',
     text: 'ASELS, KCHOL <strong>TUT</strong>',
-    rationale: 'Savunma + holding kombinasyonu defansif olarak güçlü'
-  },
+    rationale: 'Savunma sanayii ve holding kombinasyonu defansif olarak güçlü. ASELS\'in yeni ihracat sözleşmesi ve KCHOL\'un çeşitlendirilmiş portföyü orta vadeli pozisyon için elverişli görünüyor.' },
+
+  // 13 May
+  { date: '2026-05-13', model: 'claude', tag: 'buy',
+    text: 'KCHOL <strong>AL</strong> (%25 ağırlık)',
+    rationale: 'Holding indirimi son 6 ayın en geniş seviyesine açıldı. Operasyonel iştirakler güçlü performans gösteriyor; rasyonel bir konverjans tezi ile pozisyon başlatıldı.' },
+  { date: '2026-05-13', model: 'gpt', tag: 'sell-buy',
+    text: 'AKBNK <strong>SAT</strong> → BIMAS <strong>AL</strong>',
+    rationale: 'Bankacılık endeksi son beş işlem gününde momentum kaybetti. BIMAS ise gıda enflasyonu trendinde defansif bir oyun olarak güçlü; trafik verileri pozitif.' },
+  { date: '2026-05-13', model: 'gemini', tag: 'hold',
+    text: 'Tüm pozisyonlar <strong>TUT</strong>',
+    rationale: 'AKBNK, EREGL ve SISE pozisyonları teknik olarak destek seviyelerinin üzerinde. Karar değiştirmek için yeterli sinyal yok; gözlem stratejisi sürdürülüyor.' },
+  { date: '2026-05-13', model: 'grok', tag: 'sell-cash',
+    text: 'SASA <strong>SAT</strong> → Nakitte kal',
+    rationale: 'Petrokimya marjları ve döviz pozisyonu açısından SASA için risk/getiri profili bozuldu. Pozisyon kapatılarak nakit pozisyonu artırıldı.' },
+
+  // 12 May
+  { date: '2026-05-12', model: 'claude', tag: 'hold',
+    text: 'ASELS, THYAO <strong>TUT</strong>',
+    rationale: 'Savunma ve havayolu kombinasyonu hem büyüme hem defansif unsur taşıyor. Mevcut ağırlıklar koruma altında.' },
+  { date: '2026-05-12', model: 'gpt', tag: 'buy',
+    text: 'FROTO <strong>AL</strong> (%20 ağırlık)',
+    rationale: 'Otomotiv ihracat verileri beklenti üzeri. FROTO\'nun Avrupa pazar payı genişliyor; pozisyon açıldı.' },
+  { date: '2026-05-12', model: 'gemini', tag: 'sell-buy',
+    text: 'GARAN <strong>SAT</strong> → SISE <strong>AL</strong>',
+    rationale: 'Bankacılıkta düzenleyici belirsizlik artıyor; SISE\'nin döviz bazlı gelir yapısı kur volatilitesinde daha iyi performans gösterebilir.' },
+  { date: '2026-05-12', model: 'grok', tag: 'buy',
+    text: 'KOZAL <strong>AL</strong> (%30 ağırlık)',
+    rationale: 'Altın fiyatları yeni zirvede; jeopolitik riskler süregeliyor. KOZAL\'da pozisyon başlatıldı.' },
+
+  // 11 May (hafta sonu — sınırlı işlem)
+  { date: '2026-05-11', model: 'claude', tag: 'hold',
+    text: 'Hafta başı pozisyonlar <strong>TUT</strong>',
+    rationale: 'Hafta sonu sonrası açılışta volatilite ihtimali var. Mevcut pozisyonlar korunuyor; gün içi gelişmeler izlenecek.' },
+  { date: '2026-05-11', model: 'gpt', tag: 'hold',
+    text: 'Tüm pozisyonlar <strong>TUT</strong>',
+    rationale: 'Haftalık sektör rotasyon sinyali henüz net değil. Beklemede kalınıyor.' },
+
+  // 8 May
+  { date: '2026-05-08', model: 'claude', tag: 'buy',
+    text: 'THYAO <strong>AL</strong> (%25 başlangıç)',
+    rationale: 'Avrupa-Asya transit trafiği güçlü. THYAO 1Ç26 sonuçları konsensüs üzeri açıklandı; pozisyon açıldı.' },
+  { date: '2026-05-08', model: 'gpt', tag: 'buy',
+    text: 'GARAN <strong>AL</strong> (%30 ağırlık)',
+    rationale: 'Bankacılık endeksinde GARAN\'ın özkaynak kârlılığı sektör ortalamasının üzerinde. Pozisyon başlatıldı.' },
+  { date: '2026-05-08', model: 'gemini', tag: 'buy',
+    text: 'AKBNK <strong>AL</strong> (%40 ağırlık)',
+    rationale: 'AKBNK fiyat-defter çarpanı tarihsel ortalamanın altında. Pozisyon başlatıldı, ağırlık yüksek tutuldu.' },
+  { date: '2026-05-08', model: 'grok', tag: 'sell-buy',
+    text: 'AKBNK <strong>SAT</strong> → KOZAL <strong>AL</strong>',
+    rationale: 'Bankacılığa karşı temkinli kalınıyor. Altın ve değerli metallerde pozisyon güçlendiriliyor.' },
+
+  // 6 May
+  { date: '2026-05-06', model: 'claude', tag: 'buy',
+    text: 'ASELS <strong>AL</strong> (%35 başlangıç)',
+    rationale: 'Yeni ihracat anlaşması, savunma harcamalarının küresel artış trendi. Yüksek ağırlıkla pozisyon açıldı.' },
+  { date: '2026-05-06', model: 'gpt', tag: 'buy',
+    text: 'TUPRS <strong>AL</strong> (%25)',
+    rationale: 'Brent petrol stabil seyirde; TUPRS rafineri marjları geniş. Pozisyon başlatıldı.' },
+  { date: '2026-05-06', model: 'gemini', tag: 'hold',
+    text: '<strong>TUT</strong> — gözlem',
+    rationale: 'Açılış haftası, ek pozisyon için yeterli veri birikimi yok. Beklemede kalınıyor.' },
+  { date: '2026-05-06', model: 'grok', tag: 'buy',
+    text: 'SASA <strong>AL</strong> (%20)',
+    rationale: 'Petrokimya marjları toparlanıyor. Açılış pozisyonu olarak SASA seçildi.' },
+
+  // 1 May (turnuva başlangıcı)
+  { date: '2026-05-01', model: 'claude', tag: 'cash',
+    text: 'Açılış: <strong>%100 NAKİT</strong>',
+    rationale: 'Turnuva başlangıcında piyasa görünümü değerlendiriliyor. Pozisyon açmadan önce 1-2 işlem günlük gözlem yapılacak.' },
+  { date: '2026-05-01', model: 'gpt', tag: 'cash',
+    text: 'Açılış: <strong>%100 NAKİT</strong>',
+    rationale: 'Veri toplama ve baz çizgisi oluşturma günü. Konsantrasyon riski almadan ilk birkaç gün gözlem.' },
+  { date: '2026-05-01', model: 'gemini', tag: 'buy',
+    text: 'EREGL <strong>AL</strong> (%30) + SISE <strong>AL</strong> (%30)',
+    rationale: 'Açılışta sanayi ve cam sektörü pozisyonları başlatıldı. Çelik fiyatları stabil, SISE Avrupa pazarında güçlü.' },
+  { date: '2026-05-01', model: 'grok', tag: 'cash',
+    text: 'Açılış: <strong>%100 NAKİT</strong>',
+    rationale: 'Volatilite haritası çıkarılıyor. Konsantre pozisyon almadan önce 2-3 gün veri biriktirilecek.' },
 ];
+
+const SLICE_COLORS = ['#C9A84C', '#B86E45', '#6B8FB5', '#8FA876', '#A48BC0', '#4A5568'];
+
+const TR_MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const TR_DAYS = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
 
 // ─────────── HELPERS ───────────
 const fmt = n => new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(n) + ' ₺';
-const fmtPct = (start, end) => {
-  const pct = ((end - start) / start) * 100;
-  return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
-};
+
+function parseDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatDateLong(str) {
+  const d = parseDate(str);
+  return `${d.getDate()} ${TR_MONTHS[d.getMonth()]} ${d.getFullYear()} · ${TR_DAYS[d.getDay()]}`;
+}
+
+function formatDateShort(str) {
+  const d = parseDate(str);
+  return `${d.getDate()} ${TR_MONTHS[d.getMonth()].slice(0,3)}`;
+}
+
+// ISO hafta başlangıcı (Pazartesi)
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = day === 0 ? 6 : day - 1;
+  d.setDate(d.getDate() - diff);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function weekKey(dateStr) {
+  const start = getWeekStart(parseDate(dateStr));
+  return start.toISOString().slice(0, 10);
+}
+
+function weekLabel(weekKeyStr) {
+  const start = parseDate(weekKeyStr);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  const startTxt = `${start.getDate()} ${TR_MONTHS[start.getMonth()].slice(0,3)}`;
+  const endTxt = `${end.getDate()} ${TR_MONTHS[end.getMonth()].slice(0,3)}`;
+  return `${startTxt} – ${endTxt} ${end.getFullYear()}`;
+}
+
+function monthKey(dateStr) {
+  return dateStr.slice(0, 7);
+}
+
+function monthLabel(monthKeyStr) {
+  const [y, m] = monthKeyStr.split('-').map(Number);
+  return `${TR_MONTHS[m - 1]} ${y}`;
+}
 
 // ─────────── RENDER LEADERBOARD ───────────
 function renderLeaderboard() {
-  const sorted = [...MODELS]
-    .map(m => ({ ...m, current: HISTORY[m.id].at(-1), start: HISTORY[m.id][0] }))
+  const todaySorted = [...MODELS]
+    .map(m => ({ ...m, current: HISTORY[m.id].at(-1), prev: HISTORY[m.id].at(-2), start: HISTORY[m.id][0] }))
     .sort((a, b) => b.current - a.current);
 
+  const yesterdayOrder = [...MODELS]
+    .map(m => ({ id: m.id, val: HISTORY[m.id].at(-2) }))
+    .sort((a, b) => b.val - a.val)
+    .map(m => m.id);
+
   const grid = document.getElementById('leaderGrid');
-  grid.innerHTML = sorted.map((m, i) => {
+  grid.innerHTML = todaySorted.map((m, i) => {
     const pct = ((m.current - m.start) / m.start) * 100;
-    const up = pct >= 0;
+    const dir = pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat';
+    const yesterdayRank = yesterdayOrder.indexOf(m.id);
+    const rankDelta = yesterdayRank - i;
+    let rankChangeHtml = '';
+    if (rankDelta > 0) {
+      rankChangeHtml = `<span class="rank-change up">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,4 20,16 4,16"/></svg>
+        +${rankDelta} sıra</span>`;
+    } else if (rankDelta < 0) {
+      rankChangeHtml = `<span class="rank-change down">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,20 20,8 4,8"/></svg>
+        ${rankDelta} sıra</span>`;
+    } else {
+      rankChangeHtml = `<span class="rank-change">— sabit</span>`;
+    }
+
+    const pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+    const arrow = dir === 'up'
+      ? `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,4 20,16 4,16"/></svg>`
+      : dir === 'down'
+        ? `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,20 20,8 4,8"/></svg>`
+        : '';
+
+    const medalSvg = i === 0
+      ? `<svg class="rank-medal" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 4.84L20 7.78l-4 3.91.94 5.5L12 14.6l-4.94 2.6L8 11.69l-4-3.91 5.61-.94L12 2z"/></svg>`
+      : '';
+
+    const tweetText = encodeURIComponent(`${m.name} bugün BIST 100\'de ${pctStr} getirisinde — 4 yapay zekanın portföy yarışı sürüyor. Kim kazanır?`);
+    const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=https://www.pusulanfinans.com/&via=PusulanFinans`;
+
     return `
       <div class="leader-card ${i === 0 ? 'rank-1' : ''}">
         <div class="leader-stripe" style="background:${m.color}"></div>
+        <a class="leader-share" href="${tweetUrl}" target="_blank" rel="noopener" aria-label="${m.name} sonucunu paylaş">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
         <div class="rank-row">
           <span class="rank-num">${['#1', '#2', '#3', '#4'][i]}</span>
-          ${i === 0 ? '<span class="crown">👑</span>' : ''}
+          ${medalSvg}
         </div>
-        <div class="model-id">
-          <div class="model-avatar" style="background:${m.color}">${m.short}</div>
+        <div class="model-name-row">
+          <div class="model-color-dot" style="background:${m.color}"></div>
           <div class="model-name">${m.name}</div>
         </div>
         <div class="portfolio-val">${fmt(m.current)}</div>
-        <div class="change-pill ${up ? 'up' : 'down'}">
-          ${up ? '▲' : '▼'} ${(up ? '+' : '') + pct.toFixed(2)}%
+        <div class="change-row">
+          <div class="change-pill ${dir}">${arrow} ${pctStr}</div>
+          ${rankChangeHtml}
         </div>
         <div class="leader-spark">
           <canvas id="spark-${m.id}" height="36"></canvas>
@@ -844,7 +1588,7 @@ function renderLeaderboard() {
   }).join('');
 
   // sparklines
-  sorted.forEach(m => {
+  todaySorted.forEach(m => {
     const ctx = document.getElementById('spark-' + m.id);
     new Chart(ctx, {
       type: 'line',
@@ -869,67 +1613,209 @@ function renderLeaderboard() {
   });
 }
 
-// ─────────── RENDER HOLDINGS ───────────
+// ─────────── RENDER HOLDINGS + PIE CHARTS ───────────
 function renderHoldings() {
   const grid = document.getElementById('holdingsGrid');
   grid.innerHTML = MODELS.map(m => `
     <div class="holding-col">
       <div class="holding-head">
-        <div class="holding-dot" style="background:${m.color}"></div>
-        <div class="holding-name">${m.name}</div>
+        <div class="holding-head-left">
+          <div class="holding-dot" style="background:${m.color}"></div>
+          <div class="holding-name">${m.name}</div>
+        </div>
+        <div class="holding-pie">
+          <canvas id="pie-${m.id}"></canvas>
+        </div>
       </div>
-      ${HOLDINGS[m.id].map(h => `
+      ${HOLDINGS[m.id].map((h, i) => `
         <div class="holding-row">
           <div class="stock-info">
-            <div class="stock-ticker">${h.ticker}</div>
-            <div class="stock-pct">${h.pct}% ağırlık</div>
+            <div class="slice-marker" style="background:${SLICE_COLORS[i % SLICE_COLORS.length]}"></div>
+            <div class="stock-text">
+              <div class="stock-ticker">${h.ticker}</div>
+              <div class="stock-pct">%${h.pct} ağırlık</div>
+            </div>
           </div>
           <div>
             <div class="stock-val">${fmt(h.val)}</div>
-            <div class="stock-perf ${h.up === true ? 'up' : h.up === false ? 'down' : ''}">${h.perf}</div>
+            <div class="stock-perf ${h.up === true ? 'up' : h.up === false ? 'down' : 'flat'}">${h.perf}</div>
           </div>
         </div>
       `).join('')}
+      <div class="holding-foot">% getiri pozisyon açıldığından bu yana ölçülür. Yeşil = artış, kırmızı = düşüş, "—" = nakit pozisyon.</div>
     </div>
   `).join('');
+
+  // pie charts
+  MODELS.forEach(m => {
+    const ctx = document.getElementById('pie-' + m.id);
+    const data = HOLDINGS[m.id];
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: data.map(h => h.ticker),
+        datasets: [{
+          data: data.map(h => h.pct),
+          backgroundColor: data.map((_, i) => SLICE_COLORS[i % SLICE_COLORS.length]),
+          borderColor: '#162642',
+          borderWidth: 1.5,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '58%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0F1E38',
+            titleColor: '#C9A84C',
+            bodyColor: '#F8F3E8',
+            borderColor: 'rgba(201,168,76,0.3)',
+            borderWidth: 1,
+            padding: 10,
+            displayColors: false,
+            titleFont: { family: 'Playfair Display', size: 12, weight: '600' },
+            bodyFont: { family: 'JetBrains Mono', size: 11 },
+            callbacks: {
+              label: c => `%${c.parsed} ağırlık`,
+            },
+          },
+        },
+      },
+    });
+  });
 }
 
-// ─────────── RENDER FEED ───────────
+// ─────────── RENDER FEED (ARCHIVE) ───────────
+let feedFilter = 'all';
+let feedView = 'weekly';
+
+const TAG_MAP = {
+  'hold':      { cls: 'hold', label: 'TUT' },
+  'sell-buy':  { cls: 'sell', label: 'SAT-AL' },
+  'sell-cash': { cls: 'cash', label: 'NAKİT' },
+  'buy':       { cls: 'buy',  label: 'AL' },
+  'cash':      { cls: 'cash', label: 'NAKİT' },
+};
+
 function renderFeed() {
   const list = document.getElementById('feedList');
-  const tagMap = {
-    'hold':      { cls: 'hold', label: 'TUT' },
-    'sell-buy':  { cls: 'sell', label: 'SAT-AL' },
-    'sell-cash': { cls: 'cash', label: 'NAKİT' },
-    'buy':       { cls: 'buy',  label: 'AL' },
-  };
-  list.innerHTML = FEED.map(f => {
-    const m = MODELS.find(x => x.id === f.model);
-    const t = tagMap[f.tag];
-    return `
-      <li class="feed-item">
-        <div class="feed-time">${f.time}</div>
-        <div class="feed-model">
-          <div class="holding-dot" style="background:${m.color}"></div>
-          ${m.name}
-        </div>
-        <div class="feed-action">
-          <span class="action-tag ${t.cls}">${t.label}</span>
-          ${f.text}
-        </div>
-        <div class="feed-rationale">"${f.rationale}"</div>
-      </li>
-    `;
-  }).join('');
+  const filtered = feedFilter === 'all' ? FEED : FEED.filter(f => f.model === feedFilter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<li class="feed-empty">Bu filtre için henüz karar yok.</li>`;
+    return;
+  }
+
+  // Group by week or month
+  const groupKeyFn = feedView === 'weekly' ? weekKey : monthKey;
+  const groupLabelFn = feedView === 'weekly' ? weekLabel : monthLabel;
+
+  const groups = {};
+  filtered.forEach(f => {
+    const k = groupKeyFn(f.date);
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(f);
+  });
+
+  // Sort group keys descending (newest first)
+  const sortedKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+  let html = '';
+  sortedKeys.forEach(gKey => {
+    const items = groups[gKey];
+
+    // Sub-group by date within group
+    const byDate = {};
+    items.forEach(f => {
+      if (!byDate[f.date]) byDate[f.date] = [];
+      byDate[f.date].push(f);
+    });
+    const sortedDates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
+
+    html += `<li class="feed-group">
+      <div class="feed-group-head">
+        <span>${groupLabelFn(gKey)}</span>
+        <span class="feed-group-count">${items.length} karar</span>
+      </div>`;
+
+    sortedDates.forEach(date => {
+      html += `<ul style="list-style:none">
+        <li class="feed-day">
+          <div class="feed-day-head">${formatDateLong(date)} · 18:00 kapanış</div>`;
+      byDate[date].forEach((f, idx) => {
+        const m = MODELS.find(x => x.id === f.model);
+        const t = TAG_MAP[f.tag];
+        const fIdx = FEED.indexOf(f);
+        html += `
+          <div class="feed-item" data-feed-index="${fIdx}">
+            <div class="feed-model">
+              <div class="holding-dot" style="background:${m.color}"></div>
+              ${m.name}
+            </div>
+            <div class="feed-action">
+              <span class="action-tag ${t.cls}">${t.label}</span>
+              ${f.text}
+            </div>
+            <div class="feed-arrow">›</div>
+          </div>`;
+      });
+      html += `</li></ul>`;
+    });
+
+    html += `</li>`;
+  });
+
+  list.innerHTML = html;
+
+  // Attach modal handlers
+  list.querySelectorAll('.feed-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.feedIndex);
+      openModal(FEED[idx]);
+    });
+  });
 }
+
+// ─────────── MODAL ───────────
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalDot = document.getElementById('modalDot');
+const modalDate = document.getElementById('modalDate');
+const modalAction = document.getElementById('modalAction');
+const modalRationale = document.getElementById('modalRationale');
+
+function openModal(item) {
+  const m = MODELS.find(x => x.id === item.model);
+  const t = TAG_MAP[item.tag];
+  modalTitle.textContent = m.name;
+  modalDot.style.background = m.color;
+  modalDate.textContent = `${formatDateLong(item.date)} · 18:00 kapanış`;
+  modalAction.innerHTML = `<span class="action-tag ${t.cls}">${t.label}</span> ${item.text}`;
+  modalRationale.textContent = item.rationale;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ─────────── MAIN CHART ───────────
 let mainChart;
-function renderMainChart(range = 14) {
-  const start = Math.max(0, 14 - range);
-  const labels = DATES.slice(start);
+function renderMainChart(rangeKey) {
+  const total = HISTORY.claude.length;
+  const range = rangeKey === '7' ? 7 : total;
+  const start = Math.max(0, total - range);
+  const labels = DATE_LABELS.slice(start);
 
-  const datasets = MODELS.map(m => ({
+  const aiDatasets = MODELS.map(m => ({
     label: m.name,
     data: HISTORY[m.id].slice(start),
     borderColor: m.color,
@@ -944,6 +1830,44 @@ function renderMainChart(range = 14) {
     fill: false,
   }));
 
+  // BIST 100 benchmark dataset
+  const bistDataset = {
+    label: 'BIST 100',
+    data: HISTORY.bist100.slice(start),
+    borderColor: '#8A9BB5',
+    backgroundColor: '#8A9BB5',
+    borderWidth: 1.8,
+    borderDash: [6, 4],
+    tension: 0.32,
+    pointStyle: 'circle',
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    pointHoverBackgroundColor: '#8A9BB5',
+    pointHoverBorderColor: '#fff',
+    pointHoverBorderWidth: 2,
+    fill: false,
+  };
+
+  // Starting line at 100K (constant array)
+  const startLineDataset = {
+    label: '100.000 ₺ Başlangıç',
+    data: new Array(labels.length).fill(100000),
+    borderColor: 'rgba(201,168,76,0.5)',
+    borderWidth: 1,
+    borderDash: [3, 4],
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    fill: false,
+    tension: 0,
+  };
+
+  const datasets = [...aiDatasets, bistDataset, startLineDataset];
+
+  // Compute Y-axis min: floor to nearest 1000 below the lowest value
+  const allVals = datasets.flatMap(d => d.data);
+  const minVal = Math.min(...allVals);
+  const yMin = Math.floor((minVal - 1000) / 1000) * 1000;
+
   if (mainChart) mainChart.destroy();
   const ctx = document.getElementById('mainChart');
   mainChart = new Chart(ctx, {
@@ -953,17 +1877,30 @@ function renderMainChart(range = 14) {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
+      layout: {
+        padding: { left: 8, right: 8, top: 8, bottom: 0 },
+      },
       plugins: {
         legend: {
           position: 'top',
-          align: 'end',
+          align: 'center',
           labels: {
             color: '#F8F3E8',
             font: { family: 'DM Sans', size: 12, weight: '500' },
-            usePointStyle: true,
-            pointStyle: 'circle',
-            padding: 18,
-            boxWidth: 8,
+            padding: 16,
+            boxWidth: 18,
+            boxHeight: 3,
+            generateLabels: function(chart) {
+              return chart.data.datasets.map((dataset, i) => ({
+                text: dataset.label,
+                fillStyle: dataset.borderColor,
+                strokeStyle: dataset.borderColor,
+                lineWidth: 2,
+                hidden: !chart.isDatasetVisible(i),
+                lineDash: [],
+                datasetIndex: i,
+              })).filter(item => item.text !== '100.000 ₺ Başlangıç');
+            },
           },
         },
         tooltip: {
@@ -975,22 +1912,25 @@ function renderMainChart(range = 14) {
           padding: 14,
           titleFont: { family: 'Playfair Display', size: 13, weight: '600' },
           bodyFont: { family: 'JetBrains Mono', size: 12 },
+          filter: item => item.dataset.label !== '100.000 ₺ Başlangıç',
           callbacks: {
-            label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`,
+            label: c => `${c.dataset.label}: ${fmt(c.parsed.y)}`,
           },
         },
       },
       scales: {
         x: {
           grid: { color: 'rgba(201,168,76,0.05)', drawTicks: false },
-          ticks: { color: '#8A9BB5', font: { family: 'JetBrains Mono', size: 11 } },
+          ticks: { color: '#8A9BB5', font: { family: 'JetBrains Mono', size: 11 }, padding: 8 },
           border: { display: false },
         },
         y: {
+          min: yMin,
           grid: { color: 'rgba(201,168,76,0.05)', drawTicks: false },
           ticks: {
             color: '#8A9BB5',
             font: { family: 'JetBrains Mono', size: 11 },
+            padding: 8,
             callback: v => (v / 1000).toFixed(0) + 'K ₺',
           },
           border: { display: false },
@@ -1000,18 +1940,62 @@ function renderMainChart(range = 14) {
   });
 }
 
+// ─────────── LAST UPDATED ───────────
+function setLastUpdated() {
+  const d = TODAY;
+  const txt = `${d.getDate()} ${TR_MONTHS[d.getMonth()].slice(0,3)} · 18:00`;
+  document.getElementById('lastUpdated').textContent = txt;
+}
+
+// ─────────── STICKY CTA SCROLL TRIGGER ───────────
+function initStickyCta() {
+  const cta = document.getElementById('stickyCta');
+  const heroBottom = document.querySelector('.page-head').offsetHeight + document.querySelector('header').offsetHeight;
+  const onScroll = () => {
+    if (window.scrollY > heroBottom * 0.7) {
+      cta.classList.add('visible');
+    } else {
+      cta.classList.remove('visible');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 // ─────────── INIT ───────────
+setLastUpdated();
 renderLeaderboard();
-renderMainChart(14);
+renderMainChart('all');
 renderHoldings();
 renderFeed();
+initStickyCta();
 
-// Range toggle
+// Range toggle (chart)
 document.querySelectorAll('.range-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderMainChart(parseInt(btn.dataset.range));
+    renderMainChart(btn.dataset.range);
+  });
+});
+
+// Model filter
+document.querySelectorAll('#modelFilter .feed-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#modelFilter .feed-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    feedFilter = btn.dataset.filter;
+    renderFeed();
+  });
+});
+
+// View filter (weekly/monthly)
+document.querySelectorAll('#viewFilter .feed-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#viewFilter .feed-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    feedView = btn.dataset.view;
+    renderFeed();
   });
 });
 </script>
