@@ -1322,36 +1322,81 @@ const MODELS = [
 
 // 14 günlük portföy değerleri (₺) — mock veri
 // ═══════════════════════════════════════════
-// SATIR 1182'den başlayarak DEĞİŞTİR:
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// SATIR 1182'den itibaren DEĞİŞTİR (HISTORY, TODAY, HOLDINGS)
+// ═══════════════════════════════════════════════════════
 
 const HISTORY = {
-  claude: [100000],
-  gpt:    [100000],
-  gemini: [100000],
-  grok:   [100000],
-  bist100:[100000],
+  claude: [100000, 101185],
+  gpt:    [100000, 100265],
+  gemini: [100000, 100420],
+  grok:   [100000, 101220],
+  bist100:[100000, 100800],  // ← BIST 100 ilk gün getirisi ne oldu? (tahmin: +0.8%)
 };
 
-const TODAY = new Date('2026-05-11');
+const TODAY = new Date('2026-05-12');  // ← İlk günün tarihi (karar 11 Mayıs, işlem 12 Mayıs?)
 
 const HOLDINGS = {
   claude: [
-    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
+    {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'},
+    {ticker: 'TUPRS', weight: 20, value: 20000, performance: '+0.4%'},
+    {ticker: 'ASELS', weight: 15, value: 15000, performance: '+0.8%'},
+    {ticker: 'GARAN', weight: 15, value: 15000, performance: '+0.7%'},
+    {ticker: 'SISE', weight: 10, value: 10000, performance: '+0.6%'},
+    {ticker: 'Nakit', weight: 20, value: 20000, performance: '—'},
   ],
   gpt: [
-    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
+    {ticker: 'ASELS', weight: 25, value: 25000, performance: '+0.8%'},
+    {ticker: 'PGSUS', weight: 20, value: 20000, performance: '-0.9%'},
+    {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'},
+    {ticker: 'KCHOL', weight: 15, value: 15000, performance: '-0.3%'},
+    {ticker: 'BIMAS', weight: 10, value: 10000, performance: '-0.3%'},
+    {ticker: 'Nakit', weight: 10, value: 10000, performance: '—'},
   ],
   gemini: [
-    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
+    {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'},
+    {ticker: 'KCHOL', weight: 20, value: 20000, performance: '-0.3%'},
+    {ticker: 'AKBNK', weight: 20, value: 20000, performance: '+0.8%'},
+    {ticker: 'Nakit', weight: 40, value: 40000, performance: '—'},
   ],
   grok: [
-    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
+    {ticker: 'AKBNK', weight: 30, value: 30000, performance: '+0.8%'},
+    {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'},
+    {ticker: 'TCELL', weight: 10, value: 10000, performance: '+1.6%'},
+    {ticker: 'Nakit', weight: 40, value: 40000, performance: '—'},
   ],
 };
 
-const FEED = [];
-
+const FEED = [
+  {
+    date: '2026-05-12',
+    model: 'claude',
+    tag: 'entry',
+    text: '5 hisse ile başladı: ASTOR (%20), TUPRS (%20), ASELS (%15)',
+    rationale: 'Dengeli sektör dağılımı: Enerji, finans ve savunma ağırlıklı portföy.'
+  },
+  {
+    date: '2026-05-12',
+    model: 'gpt',
+    tag: 'entry',
+    text: '5 hisse ile başladı: ASELS (%25), PGSUS (%20), TCELL (%20)',
+    rationale: 'Teknoloji ve havacılık odaklı agresif pozisyon.'
+  },
+  {
+    date: '2026-05-12',
+    model: 'gemini',
+    tag: 'entry',
+    text: '3 hisse + %40 nakit: TCELL, KCHOL, AKBNK (her biri %20)',
+    rationale: 'Yüksek nakit pozisyonu ile temkinli başlangıç.'
+  },
+  {
+    date: '2026-05-12',
+    model: 'grok',
+    tag: 'entry',
+    text: '3 hisse + %40 nakit: AKBNK (%30), ASTOR (%20), TCELL (%10)',
+    rationale: 'Banka ağırlıklı, temkinli strateji.'
+  },
+];
 const SLICE_COLORS = ['#C9A84C', '#B86E45', '#6B8FB5', '#8FA876', '#A48BC0', '#4A5568'];
 
 const TR_MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
