@@ -1117,7 +1117,7 @@
   <h1>4 AI Modeli, <em>Tek Hedef:</em><br/>Portföyü Büyüt</h1>
   <p class="head-desc">Her gün aynı BIST 100 ve makroekonomik günlük gündem verileriyle 4 ayrı yapay zekayı besliyorum. Her birinin başlangıç sermayesi 100.000 ₺'di. Kim daha iyi yatırımcı? Sonuçları günlük olarak takip et.</p>
   <div class="head-meta">
-    <div class="meta-item">Başlangıç <strong>1 Mayıs 2026</strong></div>
+    <div class="meta-item">Başlangıç <strong>11 Mayıs 2026</strong></div>
     <div class="meta-item">Sermaye <strong>100.000 ₺</strong></div>
     <div class="meta-item">Evren <strong>BIST 100</strong></div>
   </div>
@@ -1322,14 +1322,14 @@ const MODELS = [
 
 // 14 günlük portföy değerleri (₺) — mock veri
 const HISTORY = {
-  claude:  [100000, 100850, 101200, 100900, 102400, 103100, 102800, 104200, 105800, 105400, 106900, 107500, 108200, 109450],
-  gpt:     [100000, 100400, 100200, 101800, 102100, 101900, 102600, 103400, 103800, 104100, 104900, 105500, 105800, 106200],
-  gemini:  [100000,  99700, 100100, 100400, 100800, 100600, 101200, 101900, 102100, 101400, 102200, 102600, 103100, 103400],
-  grok:    [100000, 100200,  99800,  99500,  99200,  98900,  98400,  97800,  97200,  97600,  96900,  96400,  96200,  95800],
-  bist100: [100000, 100300, 100600, 100900, 101400, 101700, 101500, 102100, 102600, 102400, 103100, 103500, 103800, 104200],
+  claude:  [100000, 99840],
+  gpt:     [100000, 99820],
+  gemini:  [100000, 99880],
+  grok:    [100000, 99830],
+  bist100: [100000, 100000],
 };
 
-const TODAY = new Date('2026-05-14');
+const TODAY = new Date('2026-05-11');
 const DATES = [];
 for (let i = 13; i >= 0; i--) {
   const d = new Date(TODAY);
@@ -1340,26 +1340,36 @@ const DATE_LABELS = DATES.map(d => d.toLocaleDateString('tr-TR', { day: '2-digit
 
 const HOLDINGS = {
   claude: [
-    { ticker: 'ASELS', pct: 35, val: 38308, perf: '+4.2%', up: true },
-    { ticker: 'THYAO', pct: 30, val: 32835, perf: '+6.8%', up: true },
-    { ticker: 'KCHOL', pct: 25, val: 27363, perf: '+2.1%', up: true },
-    { ticker: 'NAKİT', pct: 10, val: 10944, perf: '—',     up: null },
+  {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'}			
+  {ticker: 'TUPRS', weight: 20, value: 20000, performance: '+0.4%'}			
+  {ticker: 'ASELS', weight: 15, value: 15000, performance: '+0.8%'}			
+  {ticker: 'GARAN', weight: 15, value: 15000, performance: '+0.7%'}			
+  {ticker: 'SISE', weight: 10, value: 10000, performance: '+0.6%'}			
+  {ticker: 'NAKİT', weight: 20, value: 20000, performance: '—'},
   ],
   gpt: [
-    { ticker: 'GARAN', pct: 30, val: 31860, perf: '+5.1%', up: true },
-    { ticker: 'TUPRS', pct: 25, val: 26550, perf: '+3.4%', up: true },
-    { ticker: 'BIMAS', pct: 25, val: 26550, perf: '+1.8%', up: true },
-    { ticker: 'FROTO', pct: 20, val: 21240, perf: '+0.9%', up: true },
+  {ticker: 'ASELS', weight: 25, value: 25000, performance: '+0.8%'}			
+  {ticker: 'PGSUS', weight: 20, value: 20000, performance: '-0.9%'}			
+  {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'}			
+  {ticker: 'KCHOL', weight: 15, value: 15000, performance: '-0.3%'}			
+  {ticker: 'BIMAS', weight: 10, value: 10000, performance: '-0.3%'}			
+  {ticker: 'NAKİT', weight: 10, value: 10000, performance: '—'}			,
   ],
   gemini: [
-    { ticker: 'AKBNK', pct: 40, val: 41360, perf: '+2.8%', up: true },
-    { ticker: 'EREGL', pct: 30, val: 31020, perf: '+1.4%', up: true },
-    { ticker: 'SISE',  pct: 30, val: 31020, perf: '+0.6%', up: true },
+  {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'}			
+  {ticker: 'KCHOL', weight: 20, value: 20000, performance: '-0.3%'}			
+  {ticker: 'AKBNK', weight: 20, value: 20000, performance: '+0.8%'}			
+			
+			
+  {ticker: 'NAKİT', weight: 40, value: 40000, performance: '—'},
   ],
   grok: [
-    { ticker: 'KOZAL', pct: 45, val: 43110, perf: '−5.4%', up: false },
-    { ticker: 'THYAO', pct: 30, val: 28740, perf: '−2.1%', up: false },
-    { ticker: 'NAKİT', pct: 25, val: 23950, perf: '—',     up: null },
+   {ticker: 'AKBNK', weight: 30, value: 30000, performance: '+0.8%'}			
+  {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'}			
+  {ticker: 'TCELL', weight: 10, value: 10000, performance: '+1.6%'}			
+			
+			
+  {ticker: 'NAKİT', weight: 40, value: 40000, performance: '—'}			
   ],
 };
 
