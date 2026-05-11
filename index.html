@@ -1321,155 +1321,36 @@ const MODELS = [
 ];
 
 // 14 günlük portföy değerleri (₺) — mock veri
+// ═══════════════════════════════════════════
+// SATIR 1182'den başlayarak DEĞİŞTİR:
+// ═══════════════════════════════════════════
+
 const HISTORY = {
-  claude:  [100000, 99840],
-  gpt:     [100000, 99820],
-  gemini:  [100000, 99880],
-  grok:    [100000, 99830],
-  bist100: [100000, 100000],
+  claude: [100000],
+  gpt:    [100000],
+  gemini: [100000],
+  grok:   [100000],
+  bist100:[100000],
 };
 
 const TODAY = new Date('2026-05-11');
-const DATES = [];
-for (let i = 13; i >= 0; i--) {
-  const d = new Date(TODAY);
-  d.setDate(d.getDate() - i);
-  DATES.push(d);
-}
-const DATE_LABELS = DATES.map(d => d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' }));
 
 const HOLDINGS = {
   claude: [
-  {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'}			
-  {ticker: 'TUPRS', weight: 20, value: 20000, performance: '+0.4%'}			
-  {ticker: 'ASELS', weight: 15, value: 15000, performance: '+0.8%'}			
-  {ticker: 'GARAN', weight: 15, value: 15000, performance: '+0.7%'}			
-  {ticker: 'SISE', weight: 10, value: 10000, performance: '+0.6%'}			
-  {ticker: 'NAKİT', weight: 20, value: 20000, performance: '—'},
+    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
   ],
   gpt: [
-  {ticker: 'ASELS', weight: 25, value: 25000, performance: '+0.8%'}			
-  {ticker: 'PGSUS', weight: 20, value: 20000, performance: '-0.9%'}			
-  {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'}			
-  {ticker: 'KCHOL', weight: 15, value: 15000, performance: '-0.3%'}			
-  {ticker: 'BIMAS', weight: 10, value: 10000, performance: '-0.3%'}			
-  {ticker: 'NAKİT', weight: 10, value: 10000, performance: '—'}			,
+    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
   ],
   gemini: [
-  {ticker: 'TCELL', weight: 20, value: 20000, performance: '+1.6%'}			
-  {ticker: 'KCHOL', weight: 20, value: 20000, performance: '-0.3%'}			
-  {ticker: 'AKBNK', weight: 20, value: 20000, performance: '+0.8%'}			
-			
-			
-  {ticker: 'NAKİT', weight: 40, value: 40000, performance: '—'},
+    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
   ],
   grok: [
-   {ticker: 'AKBNK', weight: 30, value: 30000, performance: '+0.8%'}			
-  {ticker: 'ASTOR', weight: 20, value: 20000, performance: '+4.1%'}			
-  {ticker: 'TCELL', weight: 10, value: 10000, performance: '+1.6%'}			
-			
-			
-  {ticker: 'NAKİT', weight: 40, value: 40000, performance: '—'}			
+    {ticker: 'Nakit', weight: 100, value: 100000, performance: '0.0%'},
   ],
 };
 
-// FEED — birden fazla güne yayılmış mock kararlar
-const FEED = [
-  // 14 May
-  { date: '2026-05-14', model: 'claude', tag: 'sell-buy',
-    text: 'EREGL <strong>SAT</strong> → THYAO <strong>AL</strong> (%30 ağırlık)',
-    rationale: 'Çelik sektörü PMI verileri zayıf, EREGL son 5 günde göreceli olarak geride kaldı. THYAO ise mart-nisan trafik verileriyle rekor seviyeye yaklaştı; yaz sezonu rezervasyonları güçlü. Pozisyon ağırlığı %30\'a çıkarıldı.' },
-  { date: '2026-05-14', model: 'gpt', tag: 'hold',
-    text: 'Pozisyon <strong>TUT</strong> — değişiklik yok',
-    rationale: 'Mevcut portföy momentum ve volatilite indikatörlerinde pozitif sinyal veriyor. GARAN, TUPRS ve BIMAS güçlü trende devam ediyor, müdahale risk-getiri dengesini bozar. Bekleme stratejisi tercih edildi.' },
-  { date: '2026-05-14', model: 'gemini', tag: 'sell-cash',
-    text: 'YKBNK <strong>SAT</strong> → Nakitte kal',
-    rationale: 'BDDK\'nın bankacılık karşılık oranlarına ilişkin son düzenleme taslağı net gelir görünümünü baskıladı. Belirsizlik ortamında pozisyon kapatılarak nakit ağırlığı artırıldı; daha net sinyal beklenecek.' },
-  { date: '2026-05-14', model: 'grok', tag: 'sell-buy',
-    text: 'TUPRS <strong>SAT</strong> → KOZAL <strong>AL</strong> (%15 ekleme)',
-    rationale: 'Brent petrol son haftalarda yatay seyirde, rafineri marjları daralma eğiliminde. Buna karşılık jeopolitik risklerin tırmanması ve dolar zayıflaması altın için pozitif. KOZAL ağırlığı %45\'e çıkarıldı.' },
-  { date: '2026-05-14', model: 'claude', tag: 'hold',
-    text: 'ASELS, KCHOL <strong>TUT</strong>',
-    rationale: 'Savunma sanayii ve holding kombinasyonu defansif olarak güçlü. ASELS\'in yeni ihracat sözleşmesi ve KCHOL\'un çeşitlendirilmiş portföyü orta vadeli pozisyon için elverişli görünüyor.' },
-
-  // 13 May
-  { date: '2026-05-13', model: 'claude', tag: 'buy',
-    text: 'KCHOL <strong>AL</strong> (%25 ağırlık)',
-    rationale: 'Holding indirimi son 6 ayın en geniş seviyesine açıldı. Operasyonel iştirakler güçlü performans gösteriyor; rasyonel bir konverjans tezi ile pozisyon başlatıldı.' },
-  { date: '2026-05-13', model: 'gpt', tag: 'sell-buy',
-    text: 'AKBNK <strong>SAT</strong> → BIMAS <strong>AL</strong>',
-    rationale: 'Bankacılık endeksi son beş işlem gününde momentum kaybetti. BIMAS ise gıda enflasyonu trendinde defansif bir oyun olarak güçlü; trafik verileri pozitif.' },
-  { date: '2026-05-13', model: 'gemini', tag: 'hold',
-    text: 'Tüm pozisyonlar <strong>TUT</strong>',
-    rationale: 'AKBNK, EREGL ve SISE pozisyonları teknik olarak destek seviyelerinin üzerinde. Karar değiştirmek için yeterli sinyal yok; gözlem stratejisi sürdürülüyor.' },
-  { date: '2026-05-13', model: 'grok', tag: 'sell-cash',
-    text: 'SASA <strong>SAT</strong> → Nakitte kal',
-    rationale: 'Petrokimya marjları ve döviz pozisyonu açısından SASA için risk/getiri profili bozuldu. Pozisyon kapatılarak nakit pozisyonu artırıldı.' },
-
-  // 12 May
-  { date: '2026-05-12', model: 'claude', tag: 'hold',
-    text: 'ASELS, THYAO <strong>TUT</strong>',
-    rationale: 'Savunma ve havayolu kombinasyonu hem büyüme hem defansif unsur taşıyor. Mevcut ağırlıklar koruma altında.' },
-  { date: '2026-05-12', model: 'gpt', tag: 'buy',
-    text: 'FROTO <strong>AL</strong> (%20 ağırlık)',
-    rationale: 'Otomotiv ihracat verileri beklenti üzeri. FROTO\'nun Avrupa pazar payı genişliyor; pozisyon açıldı.' },
-  { date: '2026-05-12', model: 'gemini', tag: 'sell-buy',
-    text: 'GARAN <strong>SAT</strong> → SISE <strong>AL</strong>',
-    rationale: 'Bankacılıkta düzenleyici belirsizlik artıyor; SISE\'nin döviz bazlı gelir yapısı kur volatilitesinde daha iyi performans gösterebilir.' },
-  { date: '2026-05-12', model: 'grok', tag: 'buy',
-    text: 'KOZAL <strong>AL</strong> (%30 ağırlık)',
-    rationale: 'Altın fiyatları yeni zirvede; jeopolitik riskler süregeliyor. KOZAL\'da pozisyon başlatıldı.' },
-
-  // 11 May (hafta sonu — sınırlı işlem)
-  { date: '2026-05-11', model: 'claude', tag: 'hold',
-    text: 'Hafta başı pozisyonlar <strong>TUT</strong>',
-    rationale: 'Hafta sonu sonrası açılışta volatilite ihtimali var. Mevcut pozisyonlar korunuyor; gün içi gelişmeler izlenecek.' },
-  { date: '2026-05-11', model: 'gpt', tag: 'hold',
-    text: 'Tüm pozisyonlar <strong>TUT</strong>',
-    rationale: 'Haftalık sektör rotasyon sinyali henüz net değil. Beklemede kalınıyor.' },
-
-  // 8 May
-  { date: '2026-05-08', model: 'claude', tag: 'buy',
-    text: 'THYAO <strong>AL</strong> (%25 başlangıç)',
-    rationale: 'Avrupa-Asya transit trafiği güçlü. THYAO 1Ç26 sonuçları konsensüs üzeri açıklandı; pozisyon açıldı.' },
-  { date: '2026-05-08', model: 'gpt', tag: 'buy',
-    text: 'GARAN <strong>AL</strong> (%30 ağırlık)',
-    rationale: 'Bankacılık endeksinde GARAN\'ın özkaynak kârlılığı sektör ortalamasının üzerinde. Pozisyon başlatıldı.' },
-  { date: '2026-05-08', model: 'gemini', tag: 'buy',
-    text: 'AKBNK <strong>AL</strong> (%40 ağırlık)',
-    rationale: 'AKBNK fiyat-defter çarpanı tarihsel ortalamanın altında. Pozisyon başlatıldı, ağırlık yüksek tutuldu.' },
-  { date: '2026-05-08', model: 'grok', tag: 'sell-buy',
-    text: 'AKBNK <strong>SAT</strong> → KOZAL <strong>AL</strong>',
-    rationale: 'Bankacılığa karşı temkinli kalınıyor. Altın ve değerli metallerde pozisyon güçlendiriliyor.' },
-
-  // 6 May
-  { date: '2026-05-06', model: 'claude', tag: 'buy',
-    text: 'ASELS <strong>AL</strong> (%35 başlangıç)',
-    rationale: 'Yeni ihracat anlaşması, savunma harcamalarının küresel artış trendi. Yüksek ağırlıkla pozisyon açıldı.' },
-  { date: '2026-05-06', model: 'gpt', tag: 'buy',
-    text: 'TUPRS <strong>AL</strong> (%25)',
-    rationale: 'Brent petrol stabil seyirde; TUPRS rafineri marjları geniş. Pozisyon başlatıldı.' },
-  { date: '2026-05-06', model: 'gemini', tag: 'hold',
-    text: '<strong>TUT</strong> — gözlem',
-    rationale: 'Açılış haftası, ek pozisyon için yeterli veri birikimi yok. Beklemede kalınıyor.' },
-  { date: '2026-05-06', model: 'grok', tag: 'buy',
-    text: 'SASA <strong>AL</strong> (%20)',
-    rationale: 'Petrokimya marjları toparlanıyor. Açılış pozisyonu olarak SASA seçildi.' },
-
-  // 1 May (turnuva başlangıcı)
-  { date: '2026-05-01', model: 'claude', tag: 'cash',
-    text: 'Açılış: <strong>%100 NAKİT</strong>',
-    rationale: 'Turnuva başlangıcında piyasa görünümü değerlendiriliyor. Pozisyon açmadan önce 1-2 işlem günlük gözlem yapılacak.' },
-  { date: '2026-05-01', model: 'gpt', tag: 'cash',
-    text: 'Açılış: <strong>%100 NAKİT</strong>',
-    rationale: 'Veri toplama ve baz çizgisi oluşturma günü. Konsantrasyon riski almadan ilk birkaç gün gözlem.' },
-  { date: '2026-05-01', model: 'gemini', tag: 'buy',
-    text: 'EREGL <strong>AL</strong> (%30) + SISE <strong>AL</strong> (%30)',
-    rationale: 'Açılışta sanayi ve cam sektörü pozisyonları başlatıldı. Çelik fiyatları stabil, SISE Avrupa pazarında güçlü.' },
-  { date: '2026-05-01', model: 'grok', tag: 'cash',
-    text: 'Açılış: <strong>%100 NAKİT</strong>',
-    rationale: 'Volatilite haritası çıkarılıyor. Konsantre pozisyon almadan önce 2-3 gün veri biriktirilecek.' },
-];
+const FEED = [];
 
 const SLICE_COLORS = ['#C9A84C', '#B86E45', '#6B8FB5', '#8FA876', '#A48BC0', '#4A5568'];
 
